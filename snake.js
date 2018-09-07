@@ -8,16 +8,19 @@
 
 
     Acknowledgements:
-        1. Snake code largely based on that of Maria Cristina Di Termine at http://www.competa.com/blog/how-to-build-a-snake-game-using-javascript-and-html5-canvas/
 
 
 */ 
-// snake segment size (will be square)
-var segmentSize = 20;
+
+var segmentSize = 20;           // snake segment size (will be square)
+var width = 25;                 // board width (in snake segments)
+var height = 37;                // board height (in snake segments)
+
+var timeInterval = 200;         // timer interval in ms
 
 // canvas size in pixels (creates grid of snake squares)
-var canvasHeight = 25 * segmentSize;
-var canvasWidth = 37 * segmentSize;
+var canvasHeight = width * segmentSize;
+var canvasWidth = height * segmentSize;
 
 /*******************************************************************/ 
 // snake class represents an individual snake
@@ -58,6 +61,8 @@ class Snake {
         delete this.segmentList[0];
     }
 
+    // get snake direction
+    getDir(){ return this.direction;}
 
     // move snake in a direction
     moveSnake(dir){
@@ -66,18 +71,22 @@ class Snake {
         switch(dir){
             case 'up':
                 this.y--;
+                this.direction = 'up';
                 break;
             
             case 'down':
                 this.y++;
+                this.direction = 'down';
                 break;
 
             case 'left':
                 this.x--;
+                this.direction = 'left';
                 break;
             
             case 'right':
                 this.x++;
+                this.direction = 'right';
                 break;
         }
 
@@ -104,16 +113,30 @@ canvas.setAttribute("width", canvasWidth);
 // get context
 var ctx = canvas.getContext('2d');
 
-let s1 = new Snake("s1", 5, 7, 'pink', ctx);
+// array of player snakes
+var snakes = [];
+snakes.push(new Snake("s1", 5, 7, 'blue', ctx));
 
-s1.addSegment(1,1);
-s1.addSegment(1,2);
+// init game on load
+window.onload = function(){
+    startTimer();
+}
 
-s1.drawSnake();
+// start the game (and timer)
+function startTimer()
+{
+    setInterval(updateGame, timeInterval);
+}
 
-s1.moveSnake('up');
-s1.moveSnake('left');
-s1.moveSnake('down');
-s1.moveSnake('right');
+// update each step of the game
+function updateGame()
+{
+    snakes.forEach(snake => {
+        snake.moveSnake(snake.getDir());
+        snake.drawSnake();
+    });
+}
+
+snakes[0].moveSnake('right');
 
 
