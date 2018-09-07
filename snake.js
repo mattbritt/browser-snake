@@ -24,11 +24,12 @@ var canvasWidth = 37 * segmentSize;
 class Snake {
     constructor(name, x, y, color, ctx){
         this.name = name;
-        this.size = 1;
-        this.x = x;
-        this.y = y;
+        this.segmentList = [{'x':x, 'y':y}];
+        this.x = x;                 // head x position (in grid units)
+        this.y = y;                 // head y position (in grid units)
         this.color = color;
         this.ctx = ctx;
+        this.direction = null;
     }
 
     // drawSegment draws an individual snake segment
@@ -38,6 +39,56 @@ class Snake {
         ctx.fillStyle = this.color;
         ctx.fill();
         ctx.stroke();
+    }
+
+    // draw snake draws the entire snake
+    drawSnake(){
+        this.segmentList.forEach((seg)=>{
+            this.drawSegment(seg.x, seg.y);
+        })
+    }
+
+    // add new snake segment
+    addSegment(x, y){
+        this.segmentList.push({'x': x, 'y': y});
+    }
+
+    // remove tail segment
+    removeTail(){
+        delete this.segmentList[0];
+    }
+
+
+    // move snake in a direction
+    moveSnake(dir){
+        
+        // change head position
+        switch(dir){
+            case 'up':
+                this.y--;
+                break;
+            
+            case 'down':
+                this.y++;
+                break;
+
+            case 'left':
+                this.x--;
+                break;
+            
+            case 'right':
+                this.x++;
+                break;
+        }
+
+        // we won't add segments to non-moving snake
+        if(dir != null)
+        {
+            this.addSegment(this.x, this.y);
+            this.removeTail();
+        }
+
+        this.drawSnake();
     }
 }
 
@@ -53,8 +104,16 @@ canvas.setAttribute("width", canvasWidth);
 // get context
 var ctx = canvas.getContext('2d');
 
-let s1 = new Snake("s1", 50, 75, 'pink', ctx);
+let s1 = new Snake("s1", 5, 7, 'pink', ctx);
 
-s1.drawSegment(5,5);
+s1.addSegment(1,1);
+s1.addSegment(1,2);
+
+s1.drawSnake();
+
+s1.moveSnake('up');
+s1.moveSnake('left');
+s1.moveSnake('down');
+s1.moveSnake('right');
 
 
