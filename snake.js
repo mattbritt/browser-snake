@@ -58,7 +58,7 @@ class Snake {
 
     // remove tail segment
     removeTail(){
-        delete this.segmentList[0];
+        this.segmentList.splice(0,1);
     }
 
     // get snake direction
@@ -96,8 +96,6 @@ class Snake {
             this.addSegment(this.x, this.y);
             this.removeTail();
         }
-
-        this.drawSnake();
     }
 }
 
@@ -132,6 +130,12 @@ function startTimer()
 // update each step of the game
 function updateGame()
 {
+    // clear canvas
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+
+    // update snakes
     snakes.forEach(snake => {
         snake.moveSnake(snake.getDir());
         snake.drawSnake();
@@ -141,7 +145,6 @@ function updateGame()
 // handle keypresses
 function handleKeypress(event)
 {
-    console.log(event);
     switch(event.code){
         case 'ArrowUp':
             snakes[0].moveSnake('up');
@@ -156,6 +159,7 @@ function handleKeypress(event)
             snakes[0].moveSnake('right');
             break;
     }
+    updateGame();
 }
 
 snakes[0].moveSnake('right');
