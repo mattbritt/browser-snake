@@ -119,6 +119,7 @@ snakes.push(new Snake("s1", 5, 7, 'blue', ctx));
 
 // init game on load
 window.onload = function(){
+    document.addEventListener('keydown', handleKeypress);
     startTimer();
 }
 
@@ -135,6 +136,26 @@ function updateGame()
         snake.moveSnake(snake.getDir());
         snake.drawSnake();
     });
+}
+
+// handle keypresses
+function handleKeypress(event)
+{
+    console.log(event);
+    switch(event.code){
+        case 'ArrowUp':
+            snakes[0].moveSnake('up');
+            break;
+        case 'ArrowDown':
+            snakes[0].moveSnake('down');
+            break;
+        case 'ArrowLeft':
+            snakes[0].moveSnake('left');
+            break;
+        case 'ArrowRight':
+            snakes[0].moveSnake('right');
+            break;
+    }
 }
 
 snakes[0].moveSnake('right');
