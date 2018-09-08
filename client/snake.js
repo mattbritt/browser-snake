@@ -10,7 +10,7 @@
     Acknowledgements:
 
 
-*/ 
+*/
 
 var segmentSize = 20;           // snake segment size (will be square)
 var width = 25;                 // board width (in snake segments)
@@ -27,13 +27,13 @@ let socket = io();
 
 var gameData = {};              // will hold game state
 
-/*******************************************************************/ 
+/*******************************************************************/
 // snake class represents an individual snake
 // snake class represents an individual snake
 class Snake {
-    constructor(name, x, y, color){
+    constructor(name, x, y, color) {
         this.name = name;
-        this.segmentList = [{'x':x, 'y':y}];
+        this.segmentList = [{ 'x': x, 'y': y }];
         this.x = x;                 // head x position (in grid units)
         this.y = y;                 // head y position (in grid units)
         this.color = color;
@@ -42,12 +42,12 @@ class Snake {
     }
 
     // set the context to player's context
-    setContext(ctx){
+    setContext(ctx) {
         this.ctx = ctx;
     }
     // drawSegment draws an individual snake segment
     // x and y are in units of the grid
-    drawSegment(x,y){
+    drawSegment(x, y) {
         ctx.beginPath();
         ctx.rect(x * segmentSize, y * segmentSize, segmentSize, segmentSize);
         ctx.fillStyle = this.color;
@@ -56,36 +56,36 @@ class Snake {
     }
 
     // draw snake draws the entire snake
-    drawSnake(){
+    drawSnake() {
 
-        this.segmentList.forEach((seg)=>{
+        this.segmentList.forEach((seg) => {
             this.drawSegment(seg.x, seg.y);
         })
     }
 
     // add new snake segment
-    addSegment(x, y){
-        this.segmentList.push({'x': x, 'y': y});
+    addSegment(x, y) {
+        this.segmentList.push({ 'x': x, 'y': y });
     }
 
     // remove tail segment
-    removeTail(){
-        this.segmentList.splice(0,1);
+    removeTail() {
+        this.segmentList.splice(0, 1);
     }
 
     // get snake direction
-    getDir(){ return this.direction;}
+    getDir() { return this.direction; }
 
     // move snake in a direction
-    moveSnake(dir){
-        
+    moveSnake(dir) {
+
         // change head position
-        switch(dir){
+        switch (dir) {
             case 'up':
                 this.y--;
                 this.direction = 'up';
                 break;
-            
+
             case 'down':
                 this.y++;
                 this.direction = 'down';
@@ -95,7 +95,7 @@ class Snake {
                 this.x--;
                 this.direction = 'left';
                 break;
-            
+
             case 'right':
                 this.x++;
                 this.direction = 'right';
@@ -103,8 +103,7 @@ class Snake {
         }
 
         // we won't add segments to non-moving snake
-        if(dir != null)
-        {
+        if (dir != null) {
             this.addSegment(this.x, this.y);
             this.removeTail();
         }
@@ -126,23 +125,21 @@ var ctx = canvas.getContext('2d');
 // array of player snakes
 var snakes = [];
 snakes.push(new Snake("s1", 5, 7, 'blue', ctx));
-snakes.push(new Snake("nother snake", 20, 20, 'pink',ctx));
+snakes.push(new Snake("nother snake", 20, 20, 'pink', ctx));
 
 // init game on load
-window.onload = function(){
+window.onload = function () {
     document.addEventListener('keydown', handleKeypress);
     startTimer();
 }
 
 // start the game (and timer)
-function startTimer()
-{
+function startTimer() {
     setInterval(updateGame, timeInterval);
 }
 
 // update each step of the game
-function updateGame()
-{
+function updateGame() {
     // clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.width = canvasWidth;
@@ -156,9 +153,8 @@ function updateGame()
 }
 
 // handle keypresses
-function handleKeypress(event)
-{
-    switch(event.code){
+function handleKeypress(event) {
+    switch (event.code) {
         case 'ArrowUp':
             snakes[0].moveSnake('up');
             break;
@@ -176,9 +172,13 @@ function handleKeypress(event)
 }
 
 
-socket.on('update', (data)=>{
+socket.on('update', (data) => {
     gameData = data;
     console.log('updated game data');
     console.log(data.msg);
     //updateGame();
 });
+
+socket.on('joined', (id) => {
+    console.log(id + " joined");
+})
