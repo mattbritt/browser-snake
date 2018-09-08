@@ -58,12 +58,13 @@ io.sockets.on('connection', (socket) => {
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
-    game.addPlayer(socket.id.toString(), "name1");
+    game.addPlayer(socket.id, "name1");
 
     setInterval(handleUpdates, 250);
 
     // remove player on disconnect
     socket.on('disconnect', ()=>{
+        game.deletePlayer(socket.id);
         delete SOCKET_LIST[socket.id];
     });
 
