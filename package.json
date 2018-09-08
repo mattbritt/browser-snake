@@ -1,0 +1,32 @@
+{
+  "name": "browser-snake-server",
+  "version": "1.0.0",
+  "description": "node server for browser snake game",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattbritt/browser-snake.git"
+  },
+  "keywords": [
+    "browser",
+    "snake",
+    "browser-snake",
+    "OSU",
+    "osu",
+    "beaverhacks"
+  ],
+  "author": "Matt Britt, Alex Cheng, Brooks Przybylek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattbritt/browser-snake/issues"
+  },
+  "homepage": "https://github.com/mattbritt/browser-snake#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "is-empty": "^1.2.0",
+    "socket.io": "^2.1.1"
+  }
+}
