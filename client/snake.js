@@ -22,10 +22,16 @@ var timeInterval = 200;         // timer interval in ms
 var canvasHeight = width * segmentSize;
 var canvasWidth = height * segmentSize;
 
+// instantiate socket
+let socket = io();
+
+var gameData = {};              // will hold game state
+
 /*******************************************************************/ 
 // snake class represents an individual snake
+// snake class represents an individual snake
 class Snake {
-    constructor(name, x, y, color, ctx){
+    constructor(name, x, y, color){
         this.name = name;
         this.segmentList = [{'x':x, 'y':y}];
         this.x = x;                 // head x position (in grid units)
@@ -35,6 +41,10 @@ class Snake {
         this.direction = null;
     }
 
+    // set the context to player's context
+    setContext(ctx){
+        this.ctx = ctx;
+    }
     // drawSegment draws an individual snake segment
     // x and y are in units of the grid
     drawSegment(x,y){
@@ -165,6 +175,10 @@ function handleKeypress(event)
     updateGame();
 }
 
-snakes[0].moveSnake('right');
 
-
+socket.on('update', (data)=>{
+    gameData = data;
+    console.log('updated game data');
+    console.log(data.msg);
+    //updateGame();
+});
