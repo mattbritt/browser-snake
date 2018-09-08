@@ -40,7 +40,8 @@ module.exports = class Game {
         } while(this.board.getSpace(x,y));
 
         this.board.setSpace(x, y, true);
-        this.Snakes[id] = (new snake(name, x, y, color));
+        console.log(name, x, y, color);
+        this.Snakes[id] = new snake(name, x, y, color);
     }
 
     // delete player when disconnected
@@ -51,5 +52,11 @@ module.exports = class Game {
 
     moveSnake(id, direction){
         this.Snakes[id].moveSnake(direction);
+    }
+
+    move(){
+        for(var snake in this.Snakes){
+            this.Snakes[snake].moveSnake(this.Snakes[snake].direction);
+        }
     }
 }

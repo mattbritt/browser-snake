@@ -25,6 +25,8 @@ var Board = require('./gameBoard.js');
 var Game = require('./game.js');
 var empty = require('is-empty');
 
+
+
 // set up static route to server client files
 app.use('/client', express.static(__dirname + '/client'));
 
@@ -52,6 +54,7 @@ io.sockets.on('connection', (socket) => {
 
 
     function handleUpdates(){
+        game.move();
         socket.emit('update', game);
     }
     

@@ -87,4 +87,4 @@ module.exports = class Snake {
             this.removeTail();
         }
     }
-}
+};
