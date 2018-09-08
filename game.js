@@ -15,6 +15,10 @@ module.exports = class Game {
         this.colorsUsed = {};
     }
 
+    numPlayers(){
+        return Object.keys(this.Snakes).length;
+    }
+
     randomColor(){
         var nextColor;
         do{

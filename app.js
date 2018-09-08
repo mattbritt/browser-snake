@@ -25,7 +25,7 @@ var Board = require('./gameBoard.js');
 var Game = require('./game.js');
 var empty = require('is-empty');
 
-
+const MAX_PLAYERS = 8;
 
 // set up static route to server client files
 app.use('/client', express.static(__dirname + '/client'));
@@ -41,6 +41,7 @@ var port = process.argv[2] || 3000;
 server.listen(port, ()=>{
     console.log('Browser Snake server up and running on port ' + port);
 });
+
 
 
 let SOCKET_LIST = {};       // holds sockets of connected players
@@ -63,7 +64,11 @@ io.sockets.on('connection', (socket) => {
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
-    game.addPlayer(socket.id, "name1");
+    // if there's room for a player add them
+    console.log("numplayers, ",game.numPlayers());
+    if(game.numPlayers() < MAX_PLAYERS)
+      {
+            game.addPlayer(socket.id, "name1");
 
     
 
@@ -101,7 +106,11 @@ io.sockets.on('connection', (socket) => {
             socket.emit('update', game);
         }
     });
+    }
+    // else spectator mode
+    else{
 
+    }
 
     var msg = {'msg': "control is an illusion"};
     socket.emit('update', msg);
