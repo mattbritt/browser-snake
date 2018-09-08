@@ -48,4 +48,8 @@ module.exports = class Game {
         delete this.colorsUsed[this.Snakes[id].color];
         delete this.Snakes[id];
     }
+
+    moveSnake(id, direction){
+        this.Snakes[id].moveSnake(direction);
+    }
 }

@@ -13,6 +13,7 @@
 */ 
 
 
+
 // imports
 const express = require('express');
 const app = express();
@@ -73,14 +74,22 @@ io.sockets.on('connection', (socket) => {
         switch(data.direction)
         {
             case 'up':
-
+                console.log('up');
                 break;
             case 'down':
+            console.log('down');
                 break;
             case 'left':
+            console.log('left');
                 break;
             case 'right':
+            console.log('right');
                 break;
+        }
+        if(data && data.hasOwnProperty("direction"))
+        {
+            game.moveSnake(socket.id, data.direction);
+            socket.emit('update', game);
         }
     });
 

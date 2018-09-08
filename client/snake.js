@@ -191,16 +191,20 @@ function handleKeypress(event)
 {
     switch(event.code){
         case 'ArrowUp':
-            snakes[0].moveSnake('up');
+            //snakes[0].moveSnake('up');
+            socket.emit("keypress", {direction: 'up'});
             break;
         case 'ArrowDown':
-            snakes[0].moveSnake('down');
+            //snakes[0].moveSnake('down');
+            socket.emit("keypress", {direction: 'down'});
             break;
         case 'ArrowLeft':
-            snakes[0].moveSnake('left');
+            //snakes[0].moveSnake('left');
+            socket.emit("keypress", {direction: 'left'});
             break;
         case 'ArrowRight':
-            snakes[0].moveSnake('right');
+            //snakes[0].moveSnake('right');
+            socket.emit("keypress", {direction: 'right'});
             break;
     }
  //   updateGame();
