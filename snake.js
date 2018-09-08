@@ -51,6 +51,12 @@ module.exports = class Snake {
         return {'x': this.segmentList[0].x, 'y': this.segmentList[0].y};
     }
 
+    // return head segments coords
+    getHead(){
+        var lastSeg = this.segmentList.length - 1;
+        return {'x': this.segmentList[lastSeg].x, 'y': this.segmentList[lastSeg].y};
+    }
+
     // get snake direction
     getDir(){ return this.direction;}
 
@@ -86,5 +92,29 @@ module.exports = class Snake {
             this.addSegment(this.x, this.y);
             this.removeTail();
         }
+    }
+
+    nextPos(dir){
+
+        var nextX = this.x;
+        var nextY = this.y;
+
+        switch(dir){
+
+            case 'up':
+                nextY--;
+                break;
+            case 'down':
+                nextY++;
+                break;
+            case 'left':
+                nextX--;
+                break;
+            case 'right':
+                nextX++;
+                break;
+        }
+
+        return {'x': nextX, 'y': nextY};
     }
 };

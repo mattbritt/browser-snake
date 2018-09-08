@@ -27,6 +27,7 @@ function Create2DArray(rows) {
     return arr;
   }
 
+  // create a 2D board array of Spaces
   function createBoardArray(x, y){
       var arr = [];
 

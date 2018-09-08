@@ -51,12 +51,24 @@ module.exports = class Game {
     }
 
     moveSnake(id, direction){
+        var nextPos = this.Snakes[id].nextPos(direction);
+        console.log(this.board.getSpace(nextPos.x, nextPos.y));
+        if(this.board.getSpace(nextPos.x, nextPos.y) == true)
+        {
+            this.Snakes[id].direction = null;
+            return;
+        }
+        var tail = this.Snakes[id].getTail();
         this.Snakes[id].moveSnake(direction);
+        var head = this.Snakes[id].getHead();
+        this.board.setSpace(tail.x, tail.y, false);
+        this.board.setSpace(head.x, head.y, true);
     }
 
     move(){
         for(var snake in this.Snakes){
-            this.Snakes[snake].moveSnake(this.Snakes[snake].direction);
+            //this.Snakes[snake].moveSnake(this.Snakes[snake].direction);
+            this.moveSnake(snake, this.Snakes[snake].direction);
         }
     }
 }
