@@ -6,7 +6,7 @@ module.exports = class Snake {
         this.x = x;                 // head x position (in grid units)
         this.y = y;                 // head y position (in grid units)
         this.color = color;
-        this.ctx = ctx;
+        //this.ctx = ctx;
         this.direction = null;
     }
 

@@ -179,6 +179,6 @@ function handleKeypress(event)
 socket.on('update', (data)=>{
     gameData = data;
     console.log('updated game data');
-    console.log(data.msg);
+    console.log(data);
     //updateGame();
 });

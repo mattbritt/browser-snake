@@ -19,9 +19,10 @@ const app = express();
 
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-//var snake = require('./snake.js');
-//var board = require('./gameBoard.js');
-//var empty = require('is-empty');
+var snake = require('./snake.js');
+var Board = require('./gameBoard.js');
+var Game = require('./game.js');
+var empty = require('is-empty');
 
 // set up static route to server client files
 app.use('/client', express.static(__dirname + '/client'));
@@ -39,19 +40,27 @@ server.listen(port, ()=>{
 });
 
 
-
 let SOCKET_LIST = {};       // holds sockets of connected players
-let PLAYER_LIST = {};       // holds snake objects of connected players
+var game = new Game();
+
+
 
 
 // handle websockets
 io.sockets.on('connection', (socket) => {
+
+
+    function handleUpdates(){
+        socket.emit('update', game);
+    }
+    
+
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
-    //var x = 
+    game.addPlayer(socket.id.toString(), "name1");
 
-    //let player = new snake(socket.id.toString(), 
+    setInterval(handleUpdates, 250);
 
     // remove player on disconnect
     socket.on('disconnect', ()=>{
