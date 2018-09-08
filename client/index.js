@@ -6,7 +6,7 @@ const createGame = document.getElementById('createGame');
 let socket = io();
 
 socket.on('joined', (id) => {
-  console.log(id + " joined");
+  alert(id + " joined");
 })
 
 function create(e) {

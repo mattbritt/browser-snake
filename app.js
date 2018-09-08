@@ -26,7 +26,7 @@ app.use('/client', express.static(__dirname + '/client'));
 
 // server client files from / route
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/client/index.html');
+    res.sendFile(__dirname + '/client/test.html');
 });
 
 app.get('/snake', (req, res) => {
@@ -49,7 +49,7 @@ const GAMES = {
 // handle websockets
 io.sockets.on('connection', (socket) => {
     console.log('hello');
-    socket.id = Math.random();
+    // socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
     //    let player = new snake(socket.id.toString(), 
@@ -89,22 +89,15 @@ io.sockets.on('connection', (socket) => {
         console.log(GAMES);
     })
     socket.on('joinGame', (gameId) => {
+        if (gameId === '') return;
         console.log('joining');
-        socket.room = gameId;
-        socket.join(socket.room);
-        console.log(socket.rooms);
-        io.sockets.in(socket.room).emit('joined', socket.id);
+        socket.join(gameId);
+        console.log(socket.rooms[gameId]);
+        io.sockets.in(gameId).emit('joined', gameId);
     })
 
     socket.on('emitting', id => {
-        io.sockets.in(socket.room).emit('joined', socket.id);
-        // Object.keys(socket.rooms).forEach(room => {
-        //     io.of('/').in(room).clients((err, clients) => {
-        //         console.log(room);
-        //         console.log(clients);
-        //         io.sockets.in(room).emit('joined', 'sdfd');
-        //     })
-        // })
+        io.sockets.in('' + id).emit('hello', id + 'spoo');
     })
 
 })
