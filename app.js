@@ -12,8 +12,6 @@
 
 */ 
 
-
-
 // imports
 const express = require('express');
 const app = express();
@@ -25,7 +23,7 @@ var Board = require('./gameBoard.js');
 var Game = require('./game.js');
 var empty = require('is-empty');
 
-const MAX_PLAYERS = 8;
+const MAX_PLAYERS = 8;          // max players that can connect (needs to be <= to number of colors in game.js)
 
 // set up static route to server client files
 app.use('/client', express.static(__dirname + '/client'));
@@ -42,22 +40,20 @@ server.listen(port, ()=>{
     console.log('Browser Snake server up and running on port ' + port);
 });
 
-
-
 let SOCKET_LIST = {};       // holds sockets of connected players
-var game = new Game();
-
-
-
+var game = new Game();      // game object
 
 // handle websockets
 io.sockets.on('connection', (socket) => {
 
-
-    function handleUpdates(){
-        game.move();
+    // handle update (move players, etc)
+    function handleUpdates(doMove = true){
+        if(doMove)
+            game.move();
         socket.broadcast.emit('update', game);
     }
+
+    // start timer when 1st player connects
     if(empty(SOCKET_LIST)){
         setInterval(handleUpdates, 250);
     }
@@ -68,50 +64,35 @@ io.sockets.on('connection', (socket) => {
     console.log("numplayers, ",game.numPlayers());
     if(game.numPlayers() < MAX_PLAYERS)
       {
-            game.addPlayer(socket.id, "name1");
+        game.addPlayer(socket.id, "name1");
 
-    
+        // remove player on disconnect
+        socket.on('disconnect', ()=>{
+            game.deletePlayer(socket.id);
+            delete SOCKET_LIST[socket.id];
+        });
 
-    // remove player on disconnect
-    socket.on('disconnect', ()=>{
-        game.deletePlayer(socket.id);
-        delete SOCKET_LIST[socket.id];
-    });
-
-    // handle keypress
-    socket.on('keypress', (data)=>{
-        switch(data.direction)
-        {
-            case 'up':
-                console.log('up');
-                break;
-            case 'down':
-            console.log('down');
-                break;
-            case 'left':
-            console.log('left');
-                break;
-            case 'right':
-            console.log('right');
-                break;
-        }
-        if(data && data.hasOwnProperty("direction"))
-        {
-            var snakeDead = game.moveSnake(socket.id, data.direction);
-            if(snakeDead == 'Dead')
+        // handle keypress
+        socket.on('keypress', (data)=>{
+            if(data && data.hasOwnProperty("direction"))
             {
-                console.log("-- Snake died");
-                socket.emit('dead', {dead: true});
+                var snakeDead = game.moveSnake(socket.id, data.direction);
+                if(snakeDead == 'Dead')
+                {
+                    console.log("-- Snake died");
+                    socket.emit('dead', {dead: true});
+                }
+                //socket.emit('update', game);
+                handleUpdates(false);
             }
-            socket.emit('update', game);
-        }
-    });
+        });
     }
     // else spectator mode
     else{
 
     }
 
+    // default message for verification of connection
     var msg = {'msg': "control is an illusion"};
     socket.emit('update', msg);
 

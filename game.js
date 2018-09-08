@@ -2,23 +2,24 @@
 var board = require('./gameBoard.js');
 var snake = require('./snake.js');
 
-const boardX = 50;
-const boardY = 37;
-const colors = ["blue", "red", "pink", "grey", "white", "black", "brown", "green"];
+const boardX = 50;      // board x size in segments
+const boardY = 37;      // board y size in segments
+const colors = ["blue", "red", "pink", "grey", "white", "black", "brown", "green"];  // if number players exceeds number colors, server will crash
 
 module.exports = class Game {
     constructor(){
         this.board = new board(boardX, boardY);
         this.Snakes = {};
-        this.Players = {};
         this.Food = [];
         this.colorsUsed = {};
     }
 
+    // return number of current players
     numPlayers(){
         return Object.keys(this.Snakes).length;
     }
 
+    // return a random color from list (and take it out of rotation)
     randomColor(){
         var nextColor;
         do{
@@ -30,9 +31,8 @@ module.exports = class Game {
         return nextColor;
     }
 
-
+    // return a random, empty spot  -- potential endless loop if all spots occupied
     findEmptySpot(){
-        // find random, unoccupied spot 
         var x, y;
         do{
             x = Math.floor(Math.random() * boardX);
@@ -46,36 +46,45 @@ module.exports = class Game {
     // add player to free spot on board
     addPlayer(id, name){
 
+        // make sure there's food to eat
         if(this.Food.length < 1)
         {
             this.addFood();
         }
     
-        var color = this.randomColor();//'red';
+        // randomly assign new player a color
+        var color = this.randomColor();
 
-
+        // assign player to random spot
         var emptySpot = this.findEmptySpot();
         var x = emptySpot.x;
         var y = emptySpot.y;
 
         this.board.setSpace(x, y, true);
-        console.log(name, x, y, color);
+        
+        // create new snake for player
         this.Snakes[id] = new snake(name, x, y, color);
     }
 
     // delete player when disconnected
     deletePlayer(id){
         if(id in this.Snakes){
+            // clean up board
             var segments = this.Snakes[id].segmentList;
             for(var i = 0; i < segments.length; i++)
             {
                 this.board.setSpace(segments[i].x, segments[i].y, false);
             }
+
+            // return color to rotation
             delete this.colorsUsed[this.Snakes[id].color];
+
+            // remove snake from this.Snakes list
             delete this.Snakes[id];
         }
     }
 
+    // move snakes
     moveSnake(id, direction){
         var nextPos = this.Snakes[id].nextPos(direction);
 
