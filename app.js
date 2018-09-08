@@ -19,7 +19,9 @@ const app = express();
 
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-var snake = require('./snake.js');
+//var snake = require('./snake.js');
+//var board = require('./gameBoard.js');
+//var empty = require('is-empty');
 
 // set up static route to server client files
 app.use('/client', express.static(__dirname + '/client'));
@@ -36,6 +38,8 @@ server.listen(port, ()=>{
     console.log('Browser Snake server up and running on port ' + port);
 });
 
+
+
 let SOCKET_LIST = {};       // holds sockets of connected players
 let PLAYER_LIST = {};       // holds snake objects of connected players
 
@@ -45,7 +49,9 @@ io.sockets.on('connection', (socket) => {
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
-    //    let player = new snake(socket.id.toString(), 
+    //var x = 
+
+    //let player = new snake(socket.id.toString(), 
 
     // remove player on disconnect
     socket.on('disconnect', ()=>{

@@ -10,10 +10,13 @@ module.exports = class Snake {
         this.direction = null;
     }
 
+    /*
     // set the context to player's context
     setContext(ctx){
         this.ctx = ctx;
     }
+    
+    
     // drawSegment draws an individual snake segment
     // x and y are in units of the grid
     drawSegment(x,y){
@@ -31,6 +34,7 @@ module.exports = class Snake {
             this.drawSegment(seg.x, seg.y);
         })
     }
+*/
 
     // add new snake segment
     addSegment(x, y){
@@ -44,7 +48,7 @@ module.exports = class Snake {
 
     // return tail segment coords
     getTail(){
-        return {'x': this.segmentList[0].x, 'y': this.segmentList.y};
+        return {'x': this.segmentList[0].x, 'y': this.segmentList[0].y};
     }
 
     // get snake direction
