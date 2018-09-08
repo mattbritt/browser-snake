@@ -36,8 +36,8 @@ server.listen(port, ()=>{
     console.log('Browser Snake server up and running on port ' + port);
 });
 
-let SOCKET_LIST = {};
-//let PLAYER_LIST = {};
+let SOCKET_LIST = {};       // holds sockets of connected players
+let PLAYER_LIST = {};       // holds snake objects of connected players
 
 
 // handle websockets
@@ -48,9 +48,25 @@ io.sockets.on('connection', (socket) => {
     //    let player = new snake(socket.id.toString(), 
 
     // remove player on disconnect
-    socket.on('dicconnect', ()=>{
+    socket.on('disconnect', ()=>{
         delete SOCKET_LIST[socket.id];
-    })
+    });
+
+    // handle keypress
+    socket.on('keypress', (data)=>{
+        switch(data.direction)
+        {
+            case 'up':
+
+                break;
+            case 'down':
+                break;
+            case 'left':
+                break;
+            case 'right':
+                break;
+        }
+    });
 
 
     var msg = {'msg': "control is an illusion"};
