@@ -16,6 +16,9 @@ var segmentSize = 20;           // snake segment size (will be square)
 var width = 25;                 // board width (in snake segments)
 var height = 37;                // board height (in snake segments)
 
+var foodRadius = segmentSize / 2;   // radius of food dot
+var foodOffset = segmentSize / 2;   // offset to center food dot
+
 var timeInterval = 200;         // timer interval in ms
 
 // canvas size in pixels (creates grid of snake squares)
@@ -173,7 +176,20 @@ if(data.hasOwnProperty("board")){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-   
+
+if(data.hasOwnProperty("Food")){
+    var Food = data.Food;
+    for(var f = 0; f < Food.length; f++)
+    {
+        console.log("Food ", Food[f]);
+        ctx.beginPath();
+        ctx.arc(foodOffset + (Food[f].x * segmentSize), foodOffset + (Food[f].y * segmentSize), foodRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = 'red';
+        ctx.fill();
+        //ctx.stroke();
+    }
+}
+
 if(data.hasOwnProperty("Snakes")){
     // update snakes
  /*   data.Snakes.forEach(snake => {

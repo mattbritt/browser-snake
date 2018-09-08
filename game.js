@@ -11,6 +11,7 @@ module.exports = class Game {
         this.board = new board(boardX, boardY);
         this.Snakes = {};
         this.Players = {};
+        this.Food = [];
         this.colorsUsed = {};
     }
 
@@ -26,18 +27,32 @@ module.exports = class Game {
     }
 
 
-    // add player to free spot on board
-    addPlayer(id, name){
-    
-        var color = this.randomColor();//'red';
+    findEmptySpot(){
+        // find random, unoccupied spot 
         var x, y;
-
-        // find random, unoccupied spot for new player
         do{
             x = Math.floor(Math.random() * boardX);
             y = Math.floor(Math.random() * boardY);
             console.log(y);
         } while(this.board.getSpace(x,y));
+
+        return {'x': x, 'y': y};
+    }
+
+    // add player to free spot on board
+    addPlayer(id, name){
+
+        if(this.Food.length < 1)
+        {
+            this.addFood();
+        }
+    
+        var color = this.randomColor();//'red';
+
+
+        var emptySpot = this.findEmptySpot();
+        var x = emptySpot.x;
+        var y = emptySpot.y;
 
         this.board.setSpace(x, y, true);
         console.log(name, x, y, color);
@@ -52,11 +67,20 @@ module.exports = class Game {
 
     moveSnake(id, direction){
         var nextPos = this.Snakes[id].nextPos(direction);
-        console.log(this.board.getSpace(nextPos.x, nextPos.y));
-        if(this.board.getSpace(nextPos.x, nextPos.y) == true)
+
+        if(this.board.getSpace(nextPos.x, nextPos.y) != false)
         {
-            this.Snakes[id].direction = null;
-            return;
+            switch(this.board.getSpace(nextPos.x, nextPos.y))
+            {
+                case true:
+                    this.Snakes[id].direction = null;
+                    return;
+                    break;
+                case 'Food':
+                    this.Food = [];
+                    this.addFood();
+                    break;
+            };
         }
         var tail = this.Snakes[id].getTail();
         this.Snakes[id].moveSnake(direction);
@@ -70,5 +94,12 @@ module.exports = class Game {
             //this.Snakes[snake].moveSnake(this.Snakes[snake].direction);
             this.moveSnake(snake, this.Snakes[snake].direction);
         }
+    }
+
+    addFood(){
+        var emptySpot = this.findEmptySpot();
+
+        this.Food.push(emptySpot);
+        this.board.setSpace(emptySpot.x, emptySpot.y, 'Food');
     }
 }
