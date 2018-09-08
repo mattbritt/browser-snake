@@ -77,6 +77,7 @@ module.exports = class Game {
                     return;
                     break;
                 case 'Food':
+                    this.Snakes[id].extend(2);
                     this.Food = [];
                     this.addFood();
                     break;

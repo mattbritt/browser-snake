@@ -8,6 +8,7 @@ module.exports = class Snake {
         this.color = color;
         //this.ctx = ctx;
         this.direction = null;
+        this.extending = 0;
     }
 
     /*
@@ -35,6 +36,11 @@ module.exports = class Snake {
         })
     }
 */
+
+    // extend snake given # segments
+    extend(num){
+        this.extending = num;
+    }
 
     // add new snake segment
     addSegment(x, y){
@@ -90,7 +96,13 @@ module.exports = class Snake {
         if(dir != null)
         {
             this.addSegment(this.x, this.y);
-            this.removeTail();
+            
+            if(this.extending > 0){
+                this.extending--;
+            }
+            else{
+                this.removeTail();
+            }
         }
     }
 
