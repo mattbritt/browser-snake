@@ -38,6 +38,7 @@ class Snake {
     // drawSegment draws an individual snake segment
     // x and y are in units of the grid
     drawSegment(x,y){
+        ctx.beginPath();
         ctx.rect(x * segmentSize, y * segmentSize, segmentSize, segmentSize);
         ctx.fillStyle = this.color;
         ctx.fill();
@@ -46,6 +47,7 @@ class Snake {
 
     // draw snake draws the entire snake
     drawSnake(){
+
         this.segmentList.forEach((seg)=>{
             this.drawSegment(seg.x, seg.y);
         })
@@ -114,6 +116,7 @@ var ctx = canvas.getContext('2d');
 // array of player snakes
 var snakes = [];
 snakes.push(new Snake("s1", 5, 7, 'blue', ctx));
+snakes.push(new Snake("nother snake", 20, 20, 'pink',ctx));
 
 // init game on load
 window.onload = function(){
@@ -131,7 +134,7 @@ function startTimer()
 function updateGame()
 {
     // clear canvas
-    ctx.clearRect(0,0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
 
