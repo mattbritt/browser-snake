@@ -55,16 +55,17 @@ io.sockets.on('connection', (socket) => {
 
     function handleUpdates(){
         game.move();
-        socket.emit('update', game);
+        socket.broadcast.emit('update', game);
     }
-    
-
+    if(empty(SOCKET_LIST)){
+        setInterval(handleUpdates, 250);
+    }
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
     game.addPlayer(socket.id, "name1");
 
-    setInterval(handleUpdates, 250);
+    
 
     // remove player on disconnect
     socket.on('disconnect', ()=>{
@@ -91,7 +92,12 @@ io.sockets.on('connection', (socket) => {
         }
         if(data && data.hasOwnProperty("direction"))
         {
-            game.moveSnake(socket.id, data.direction);
+            var snakeDead = game.moveSnake(socket.id, data.direction);
+            if(snakeDead == 'Dead')
+            {
+                console.log("-- Snake died");
+                socket.emit('dead', {dead: true});
+            }
             socket.emit('update', game);
         }
     });

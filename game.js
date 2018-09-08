@@ -61,8 +61,15 @@ module.exports = class Game {
 
     // delete player when disconnected
     deletePlayer(id){
-        delete this.colorsUsed[this.Snakes[id].color];
-        delete this.Snakes[id];
+        if(id in this.Snakes){
+            var segments = this.Snakes[id].segmentList;
+            for(var i = 0; i < segments.length; i++)
+            {
+                this.board.setSpace(segments[i].x, segments[i].y, false);
+            }
+            delete this.colorsUsed[this.Snakes[id].color];
+            delete this.Snakes[id];
+        }
     }
 
     moveSnake(id, direction){
@@ -74,7 +81,8 @@ module.exports = class Game {
             {
                 case true:
                     this.Snakes[id].direction = null;
-                    return;
+                    //this.deletePlayer(id);
+                    return 'Dead';
                     break;
                 case 'Food':
                     this.Snakes[id].extend(2);

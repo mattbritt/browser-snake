@@ -233,3 +233,10 @@ socket.on('update', (data)=>{
     console.log(data);
     updateGame(data);
 });
+
+socket.on('dead', (data)=>{
+    console.log("*** Snake died");
+    ctx.fillStyle = "blue";
+    window.location.replace('/client/dead.html');
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+})
