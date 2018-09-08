@@ -140,19 +140,50 @@ function startTimer()
     setInterval(updateGame, timeInterval);
 }
 
+    // drawSegment draws an individual snake segment
+    // x and y are in units of the grid
+function drawSegment(x,y, color){
+        ctx.beginPath();
+        ctx.rect(x * segmentSize, y * segmentSize, segmentSize, segmentSize);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.stroke();
+    }
+
+function drawSnake(snake){
+    for(var segment in snake.segmentList){
+        var x = snake.segmentList[segment].x;
+        var y = snake.segmentList[segment].y;
+
+        drawSegment(x, y, snake.color);
+    }
+}
+
 // update each step of the game
-function updateGame()
+function updateGame(data = null)
 {
+    if(data === null) return;
+if(data.hasOwnProperty("board")){
+    width = data.board.maxX;
+    height = data.board.maxY;
+    canvasWidth = segmentSize * width;
+    canvasHeight = segmentSize * height;
+}
     // clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-
+   
+if(data.hasOwnProperty("Snakes")){
     // update snakes
-    snakes.forEach(snake => {
+ /*   data.Snakes.forEach(snake => {
         snake.moveSnake(snake.getDir());
         snake.drawSnake();
-    });
+    });*/
+    for(var snake in data.Snakes){
+        drawSnake(data.Snakes[snake]);
+    }
+}
 }
 
 // handle keypresses
@@ -172,7 +203,7 @@ function handleKeypress(event)
             snakes[0].moveSnake('right');
             break;
     }
-    updateGame();
+ //   updateGame();
 }
 
 
@@ -180,5 +211,5 @@ socket.on('update', (data)=>{
     gameData = data;
     console.log('updated game data');
     console.log(data);
-    //updateGame();
+    updateGame(data);
 });
