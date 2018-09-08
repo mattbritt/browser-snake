@@ -181,7 +181,6 @@ if(data.hasOwnProperty("Food")){
     var Food = data.Food;
     for(var f = 0; f < Food.length; f++)
     {
-        console.log("Food ", Food[f]);
         ctx.beginPath();
         ctx.arc(foodOffset + (Food[f].x * segmentSize), foodOffset + (Food[f].y * segmentSize), foodRadius, 0, 2 * Math.PI);
         ctx.fillStyle = 'red';
@@ -229,8 +228,6 @@ function handleKeypress(event)
 
 socket.on('update', (data)=>{
     gameData = data;
-    console.log('updated game data');
-    console.log(data);
     updateGame(data);
 });
 

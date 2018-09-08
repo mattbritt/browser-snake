@@ -6,19 +6,19 @@ Built by the crackpot team browser-snake consisting of Brooks Przybylek, Alex Ch
 
 Todo:
 - back end snake code
-    - convert to unit-less (everything in terms of snake segment grid) -- no mo pixels on backend
-    - timing loop
+   done - convert to unit-less (everything in terms of snake segment grid) -- no mo pixels on backend
+   done  - timing loop
     - game board class & collision detection
-        - grid with which squares are occupied for quick and easy check of collision
-    - accept direction changes -- arrow keys (could also add WASD for the lefties out there)
-    - 'food' & points & lengthen snake
-        - snake grow routine
+       done - grid with which squares are occupied for quick and easy check of collision
+    done - accept direction changes -- arrow keys (could also add WASD for the lefties out there)
+    done - 'food' & points & lengthen snake
+    done    - snake grow routine
     
 
 - front end snake display code
-    - convert from unit-less (snake segments) to whatever is available for display
-    - emit key events
-    - handle collisions when server detects them
+    done - convert from unit-less (snake segments) to whatever is available for display
+    done - emit key events
+    done - handle collisions when server detects them
 
     ## Niceties
     - User accounts?

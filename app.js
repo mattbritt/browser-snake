@@ -61,7 +61,6 @@ io.sockets.on('connection', (socket) => {
     SOCKET_LIST[socket.id] = socket;
 
     // if there's room for a player add them
-    console.log("numplayers, ",game.numPlayers());
     if(game.numPlayers() < MAX_PLAYERS)
       {
         game.addPlayer(socket.id, "name1");

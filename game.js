@@ -24,7 +24,6 @@ module.exports = class Game {
         var nextColor;
         do{
             nextColor = colors[Math.floor(Math.random() * colors.length)];
-            console.log(nextColor);
         }while((nextColor in this.colorsUsed));
 
         this.colorsUsed[nextColor] = true;
@@ -37,7 +36,6 @@ module.exports = class Game {
         do{
             x = Math.floor(Math.random() * boardX);
             y = Math.floor(Math.random() * boardY);
-            console.log(y);
         } while(this.board.getSpace(x,y));
 
         return {'x': x, 'y': y};
