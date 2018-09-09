@@ -52,7 +52,10 @@ io.sockets.on('connection', (socket) => {
     function handleUpdates(doMove = true){
         if(doMove)
             game.move();
-        socket.broadcast.emit('update', game);
+        //socket.broadcast.emit('update', game);
+        for (let soc in SOCKET_LIST) {
+            SOCKET_LIST[soc].emit('update', game);
+        }
     }
 
     // start timer when 1st player connects
@@ -60,9 +63,7 @@ io.sockets.on('connection', (socket) => {
         setInterval(handleUpdates, 250);
     }
     var player_id = Math.random() * 10;
-    socket.id = (Math.random() + 1).toString(36).slice(2,18);
-    //socket.id = socket.id.toString();
-    console.log(socket.id)
+
     SOCKET_LIST[socket.id] = socket;
 
     // if there's room for a player add them
