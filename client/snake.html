@@ -51,7 +51,7 @@
   </nav>
 
   <!-- Modal -->
-  <div class="modal fade" id="getNameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal fade" id="getNameModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -70,21 +70,42 @@
       </div>
     </div>
   </div>
-  <div class="container">
-    <h2>Current Game:</h2>
+  <div class="container" style="padding-top:40px">
 
     <div id="container-canvas">
       <!-- Main Canvas where game is played -->
       <canvas id="canvas" width="350" height="350">
-
       </canvas>
     </div>
-
-    <h4>How to Play:</h4>
-    <ul>
-      <li>Use Arrow Keys</li>
-      <li>Avoid snakes</li>
-    </ul>
+    <div class="row" style="padding-top: 20px;text-align:center">
+      <div class="col"></div>
+      <div class="col-md-3">
+        <ul class="list-group" id='topscores'>
+          <li class="list-group-item ">
+            <strong>Top Scores</strong>
+          </li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <ul class="list-group" id='playerslist'>
+          <li class="list-group-item">
+            <strong>Players</strong>
+          </li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+      </div>
+      <div class="col"></div>
+    </div>
   </div>
   <br>
 
