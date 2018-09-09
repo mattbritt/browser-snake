@@ -25,6 +25,11 @@ var timeInterval = 200;         // timer interval in ms
 var canvasHeight = width * segmentSize;
 var canvasWidth = height * segmentSize;
 
+
+var playerName = null;
+var playerTable = document.getElementById('playerTable');
+var replayButton = document.getElementById('replay');
+
 // instantiate socket
 let socket = io();
 
@@ -131,8 +136,16 @@ snakes.push(new Snake("s1", 5, 7, 'blue', ctx));
 snakes.push(new Snake("nother snake", 20, 20, 'pink', ctx));
 
 // init game on load
+function doReplay(){
+    replayButton.disabled = true;
+    socket.emit('addPlayer', { name: playerName });
+}
+
 
 window.onload = function () {
+    replayButton.disabled = true;
+    replayButton.addEventListener('click', doReplay);
+
     $('#getNameModal').modal('show');
     document.querySelector('#nameBtn').addEventListener('click', sendName);
 }
@@ -159,6 +172,32 @@ function drawSnake(snake) {
     }
 }
 
+// update the table of player names and colors
+function updatePlayerTable(playerData){
+
+    var td, tr, tn;
+    
+    playerTable.innerHTML = "";
+
+
+    if(playerData){
+        playerData.forEach((player)=>{
+            tr = document.createElement('tr');
+            td = document.createElement('td');
+            td.textContent = player.name;
+            td.style.color = 'white';
+            if(player.color == 'white')
+                td.style.color = 'black';
+            td.style.backgroundColor = player.color;
+            //tn = document.createTextNode(player.name);
+            //td.setAttribute('color', player.color);
+            tr.appendChild(td);
+            playerTable.appendChild(tr);
+        })
+    }
+}
+
+
 // update each step of the game
 function updateGame(data = null) {
     if (data === null) return;
@@ -183,6 +222,8 @@ function updateGame(data = null) {
             //ctx.stroke();
         }
     }
+console.log(data);
+
 
     if (data.hasOwnProperty("Snakes")) {
         // update snakes
@@ -190,14 +231,21 @@ function updateGame(data = null) {
                snake.moveSnake(snake.getDir());
                snake.drawSnake();
            });*/
+
+        var playerData = [];
+
         for (var snake in data.Snakes) {
+            playerData.push({'name': data.Snakes[snake].name, 'color': data.Snakes[snake].color});
             drawSnake(data.Snakes[snake]);
         }
+
+        updatePlayerTable(playerData);
     }
 }
 
 function sendName(event) {
-    socket.emit('addPlayer', { name: document.querySelector("#playerName").value });
+    playerName = document.querySelector("#playerName").value;
+    socket.emit('addPlayer', { name: playerName });
     document.addEventListener('keydown', handleKeypress); // add after modal close
     event.preventDefault();
 }
@@ -233,7 +281,8 @@ socket.on('update', (data) => {
 
 socket.on('dead', (data) => {
     console.log("*** Snake died");
+    replayButton.disabled = false;
     ctx.fillStyle = "blue";
-    window.location.replace('/client/dead.html');
+    //window.location.replace('/client/dead.html');
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 })

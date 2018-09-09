@@ -71,7 +71,10 @@ io.sockets.on('connection', (socket) => {
 
         var name = socket.id;
         if(data && data.hasOwnProperty('name'))
+        {
             name = data.name;
+            console.log('name ', name);
+        }
 
         // if there's room for a player add them
         if(game.numPlayers() < MAX_PLAYERS)
