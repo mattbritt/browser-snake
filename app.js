@@ -66,36 +66,43 @@ io.sockets.on('connection', (socket) => {
 
     SOCKET_LIST[socket.id] = socket;
 
-    // if there's room for a player add them
-    if(game.numPlayers() < MAX_PLAYERS)
-      {
-        game.addPlayer(player_id, "name1");
+    // on addPlayer event, attempt to add player
+    socket.on('addPlayer', (data)=>{
 
-        // remove player on disconnect
-        socket.on('disconnect', ()=>{
-            game.deletePlayer(player_id);
-            delete SOCKET_LIST[socket.id];
-        });
+        var name = socket.id;
+        if(data && data.hasOwnProperty('name'))
+            name = data.name;
 
-        // handle keypress
-        socket.on('keypress', (data)=>{
-            if(data && data.hasOwnProperty("direction"))
-            {
-                var snakeDead = game.moveSnake(player_id, data.direction);
-                if(snakeDead == 'Dead')
+        // if there's room for a player add them
+        if(game.numPlayers() < MAX_PLAYERS)
+        {
+            game.addPlayer(player_id, name);
+
+            // remove player on disconnect
+            socket.on('disconnect', ()=>{
+                game.deletePlayer(player_id);
+                delete SOCKET_LIST[socket.id];
+            });
+
+            // handle keypress
+            socket.on('keypress', (data)=>{
+                if(data && data.hasOwnProperty("direction"))
                 {
-                    console.log("-- Snake died");
-                    socket.emit('dead', {dead: true});
+                    var snakeDead = game.moveSnake(player_id, data.direction);
+                    if(snakeDead == 'Dead')
+                    {
+                        console.log("-- Snake died");
+                        socket.emit('dead', {dead: true});
+                    }
+                    //socket.emit('update', game);
+                    handleUpdates(false);
                 }
-                //socket.emit('update', game);
-                handleUpdates(false);
-            }
-        });
-    }
+            });
+        }
     // else spectator mode
     else{
 
-    }
+    }});
 
     // default message for verification of connection
     var msg = {'msg': "control is an illusion"};
