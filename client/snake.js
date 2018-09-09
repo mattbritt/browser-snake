@@ -10,7 +10,7 @@
     Acknowledgements:
 
 
-*/ 
+*/
 
 var segmentSize = 20;           // snake segment size (will be square)
 var width = 25;                 // board width (in snake segments)
@@ -30,13 +30,13 @@ let socket = io();
 
 var gameData = {};              // will hold game state
 
-/*******************************************************************/ 
+/*******************************************************************/
 // snake class represents an individual snake
 // snake class represents an individual snake
 class Snake {
-    constructor(name, x, y, color){
+    constructor(name, x, y, color) {
         this.name = name;
-        this.segmentList = [{'x':x, 'y':y}];
+        this.segmentList = [{ 'x': x, 'y': y }];
         this.x = x;                 // head x position (in grid units)
         this.y = y;                 // head y position (in grid units)
         this.color = color;
@@ -45,12 +45,12 @@ class Snake {
     }
 
     // set the context to player's context
-    setContext(ctx){
+    setContext(ctx) {
         this.ctx = ctx;
     }
     // drawSegment draws an individual snake segment
     // x and y are in units of the grid
-    drawSegment(x,y){
+    drawSegment(x, y) {
         ctx.beginPath();
         ctx.rect(x * segmentSize, y * segmentSize, segmentSize, segmentSize);
         ctx.fillStyle = this.color;
@@ -59,36 +59,36 @@ class Snake {
     }
 
     // draw snake draws the entire snake
-    drawSnake(){
+    drawSnake() {
 
-        this.segmentList.forEach((seg)=>{
+        this.segmentList.forEach((seg) => {
             this.drawSegment(seg.x, seg.y);
         })
     }
 
     // add new snake segment
-    addSegment(x, y){
-        this.segmentList.push({'x': x, 'y': y});
+    addSegment(x, y) {
+        this.segmentList.push({ 'x': x, 'y': y });
     }
 
     // remove tail segment
-    removeTail(){
-        this.segmentList.splice(0,1);
+    removeTail() {
+        this.segmentList.splice(0, 1);
     }
 
     // get snake direction
-    getDir(){ return this.direction;}
+    getDir() { return this.direction; }
 
     // move snake in a direction
-    moveSnake(dir){
-        
+    moveSnake(dir) {
+
         // change head position
-        switch(dir){
+        switch (dir) {
             case 'up':
                 this.y--;
                 this.direction = 'up';
                 break;
-            
+
             case 'down':
                 this.y++;
                 this.direction = 'down';
@@ -98,7 +98,7 @@ class Snake {
                 this.x--;
                 this.direction = 'left';
                 break;
-            
+
             case 'right':
                 this.x++;
                 this.direction = 'right';
@@ -106,8 +106,7 @@ class Snake {
         }
 
         // we won't add segments to non-moving snake
-        if(dir != null)
-        {
+        if (dir != null) {
             this.addSegment(this.x, this.y);
             this.removeTail();
         }
@@ -129,32 +128,31 @@ var ctx = canvas.getContext('2d');
 // array of player snakes
 var snakes = [];
 snakes.push(new Snake("s1", 5, 7, 'blue', ctx));
-snakes.push(new Snake("nother snake", 20, 20, 'pink',ctx));
+snakes.push(new Snake("nother snake", 20, 20, 'pink', ctx));
 
 // init game on load
-window.onload = function(){
+window.onload = function () {
     document.addEventListener('keydown', handleKeypress);
     startTimer();
 }
 
 // start the game (and timer)
-function startTimer()
-{
+function startTimer() {
     setInterval(updateGame, timeInterval);
 }
 
-    // drawSegment draws an individual snake segment
-    // x and y are in units of the grid
-function drawSegment(x,y, color){
-        ctx.beginPath();
-        ctx.rect(x * segmentSize, y * segmentSize, segmentSize, segmentSize);
-        ctx.fillStyle = color;
-        ctx.fill();
-        ctx.stroke();
-    }
+// drawSegment draws an individual snake segment
+// x and y are in units of the grid
+function drawSegment(x, y, color) {
+    ctx.beginPath();
+    ctx.rect(x * segmentSize, y * segmentSize, segmentSize, segmentSize);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.stroke();
+}
 
-function drawSnake(snake){
-    for(var segment in snake.segmentList){
+function drawSnake(snake) {
+    for (var segment in snake.segmentList) {
         var x = snake.segmentList[segment].x;
         var y = snake.segmentList[segment].y;
 
@@ -163,77 +161,74 @@ function drawSnake(snake){
 }
 
 // update each step of the game
-function updateGame(data = null)
-{
-    if(data === null) return;
-if(data.hasOwnProperty("board")){
-    width = data.board.maxX;
-    height = data.board.maxY;
-    canvasWidth = segmentSize * width;
-    canvasHeight = segmentSize * height;
-}
+function updateGame(data = null) {
+    if (data === null) return;
+    if (data.hasOwnProperty("board")) {
+        width = data.board.maxX;
+        height = data.board.maxY;
+        canvasWidth = segmentSize * width;
+        canvasHeight = segmentSize * height;
+    }
     // clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
 
-if(data.hasOwnProperty("Food")){
-    var Food = data.Food;
-    for(var f = 0; f < Food.length; f++)
-    {
-        ctx.beginPath();
-        ctx.arc(foodOffset + (Food[f].x * segmentSize), foodOffset + (Food[f].y * segmentSize), foodRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = 'red';
-        ctx.fill();
-        //ctx.stroke();
+    if (data.hasOwnProperty("Food")) {
+        var Food = data.Food;
+        for (var f = 0; f < Food.length; f++) {
+            ctx.beginPath();
+            ctx.arc(foodOffset + (Food[f].x * segmentSize), foodOffset + (Food[f].y * segmentSize), foodRadius, 0, 2 * Math.PI);
+            ctx.fillStyle = 'red';
+            ctx.fill();
+            //ctx.stroke();
+        }
     }
-}
 
-if(data.hasOwnProperty("Snakes")){
-    // update snakes
- /*   data.Snakes.forEach(snake => {
-        snake.moveSnake(snake.getDir());
-        snake.drawSnake();
-    });*/
-    for(var snake in data.Snakes){
-        drawSnake(data.Snakes[snake]);
+    if (data.hasOwnProperty("Snakes")) {
+        // update snakes
+        /*   data.Snakes.forEach(snake => {
+               snake.moveSnake(snake.getDir());
+               snake.drawSnake();
+           });*/
+        for (var snake in data.Snakes) {
+            drawSnake(data.Snakes[snake]);
+        }
     }
-}
 }
 
 // handle keypresses
-function handleKeypress(event)
-{
-    switch(event.code){
+function handleKeypress(event) {
+    switch (event.code) {
         case 'ArrowUp':
             //snakes[0].moveSnake('up');
-            socket.emit("keypress", {direction: 'up'});
+            socket.emit("keypress", { direction: 'up' });
             break;
         case 'ArrowDown':
             //snakes[0].moveSnake('down');
-            socket.emit("keypress", {direction: 'down'});
+            socket.emit("keypress", { direction: 'down' });
             break;
         case 'ArrowLeft':
             //snakes[0].moveSnake('left');
-            socket.emit("keypress", {direction: 'left'});
+            socket.emit("keypress", { direction: 'left' });
             break;
         case 'ArrowRight':
             //snakes[0].moveSnake('right');
-            socket.emit("keypress", {direction: 'right'});
+            socket.emit("keypress", { direction: 'right' });
             break;
     }
- //   updateGame();
+    //   updateGame();
 }
 
 
-socket.on('update', (data)=>{
+socket.on('update', (data) => {
     gameData = data;
     updateGame(data);
 });
 
-socket.on('dead', (data)=>{
+socket.on('dead', (data) => {
     console.log("*** Snake died");
     ctx.fillStyle = "blue";
     window.location.replace('/client/dead.html');
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 })
