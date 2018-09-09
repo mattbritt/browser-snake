@@ -33,10 +33,11 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/client/snake.html');
 });
 
-
 // start server
-var port = process.argv[2] || 3000;
-server.listen(port, () => {
+// altered port code for heroku deploy (heroku assigns its own port)
+//var port = process.argv[2] || 3000;
+var port = process.env.PORT || 3000;
+server.listen(port, ()=>{
     console.log('Browser Snake server up and running on port ' + port);
 });
 
@@ -61,9 +62,7 @@ io.sockets.on('connection', (socket) => {
         setInterval(handleUpdates, 250);
     }
     var player_id = Math.random() * 10;
-    // socket.id = (Math.random() + 1).toString(36).slice(2, 18);
-    // socket.id = socket.id.toString();
-    console.log(socket.id)
+  
     SOCKET_LIST[player_id] = socket;
 
     // if there's room for a player add them

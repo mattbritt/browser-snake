@@ -2,3 +2,8 @@
 #canvas{
     border: 2px solid black;
 }
+
+.container-canvas {
+    margin: 0 auto;
+    width: 800px;
+}
