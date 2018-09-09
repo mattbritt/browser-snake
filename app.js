@@ -57,17 +57,20 @@ io.sockets.on('connection', (socket) => {
     if(empty(SOCKET_LIST)){
         setInterval(handleUpdates, 250);
     }
-    socket.id = Math.random();
+    var player_id = Math.random() * 10;
+    //socket.id = (Math.random() + 1).toString(36).slice(2,18);
+    //socket.id = socket.id.toString();
+    console.log(socket.id)
     SOCKET_LIST[socket.id] = socket;
 
     // if there's room for a player add them
     if(game.numPlayers() < MAX_PLAYERS)
       {
-        game.addPlayer(socket.id, "name1");
+        game.addPlayer(player_id, "name1");
 
         // remove player on disconnect
         socket.on('disconnect', ()=>{
-            game.deletePlayer(socket.id);
+            game.deletePlayer(player_id);
             delete SOCKET_LIST[socket.id];
         });
 
@@ -75,7 +78,7 @@ io.sockets.on('connection', (socket) => {
         socket.on('keypress', (data)=>{
             if(data && data.hasOwnProperty("direction"))
             {
-                var snakeDead = game.moveSnake(socket.id, data.direction);
+                var snakeDead = game.moveSnake(player_id, data.direction);
                 if(snakeDead == 'Dead')
                 {
                     console.log("-- Snake died");
