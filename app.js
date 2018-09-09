@@ -10,7 +10,7 @@
     Acknowledgements:
 
 
-*/ 
+*/
 
 // imports
 const express = require('express');
@@ -33,7 +33,6 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/client/snake.html');
 });
 
-
 // start server
 // altered port code for heroku deploy (heroku assigns its own port)
 //var port = process.argv[2] || 3000;
@@ -49,42 +48,40 @@ var game = new Game();      // game object
 io.sockets.on('connection', (socket) => {
 
     // handle update (move players, etc)
-    function handleUpdates(doMove = true){
-        if(doMove)
+    function handleUpdates(doMove = true) {
+        if (doMove)
             game.move();
-        socket.broadcast.emit('update', game);
+        // socket.broadcast.emit('update', game);
+        for (let soc in SOCKET_LIST) {
+            SOCKET_LIST[soc].emit('update', game);
+        }
     }
 
     // start timer when 1st player connects
-    if(empty(SOCKET_LIST)){
+    if (empty(SOCKET_LIST)) {
         setInterval(handleUpdates, 250);
     }
     var player_id = Math.random() * 10;
-    socket.id = (Math.random() + 1).toString(36).slice(2,18);
-    //socket.id = socket.id.toString();
-    console.log(socket.id)
-    SOCKET_LIST[socket.id] = socket;
+  
+    SOCKET_LIST[player_id] = socket;
 
     // if there's room for a player add them
-    if(game.numPlayers() < MAX_PLAYERS)
-      {
+    if (game.numPlayers() < MAX_PLAYERS) {
         game.addPlayer(player_id, "name1");
 
         // remove player on disconnect
-        socket.on('disconnect', ()=>{
+        socket.on('disconnect', () => {
             game.deletePlayer(player_id);
-            delete SOCKET_LIST[socket.id];
+            delete SOCKET_LIST[player_id];
         });
 
         // handle keypress
-        socket.on('keypress', (data)=>{
-            if(data && data.hasOwnProperty("direction"))
-            {
+        socket.on('keypress', (data) => {
+            if (data && data.hasOwnProperty("direction")) {
                 var snakeDead = game.moveSnake(player_id, data.direction);
-                if(snakeDead == 'Dead')
-                {
+                if (snakeDead == 'Dead') {
                     console.log("-- Snake died");
-                    socket.emit('dead', {dead: true});
+                    socket.emit('dead', { dead: true });
                 }
                 //socket.emit('update', game);
                 handleUpdates(false);
@@ -92,12 +89,12 @@ io.sockets.on('connection', (socket) => {
         });
     }
     // else spectator mode
-    else{
+    else {
 
     }
 
     // default message for verification of connection
-    var msg = {'msg': "control is an illusion"};
+    var msg = { 'msg': "control is an illusion" };
     socket.emit('update', msg);
 
 })
