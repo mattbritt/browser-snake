@@ -204,6 +204,7 @@ if(data.hasOwnProperty("Snakes")){
 // handle keypresses
 function handleKeypress(event)
 {
+    event.preventDefault();
     switch(event.code){
         case 'ArrowUp':
             //snakes[0].moveSnake('up');
