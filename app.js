@@ -35,7 +35,9 @@ app.get('/', (req, res) => {
 
 
 // start server
-var port = process.argv[2] || 3000;
+// altered port code for heroku deploy (heroku assigns its own port)
+//var port = process.argv[2] || 3000;
+var port = process.env.PORT || 3000;
 server.listen(port, ()=>{
     console.log('Browser Snake server up and running on port ' + port);
 });
