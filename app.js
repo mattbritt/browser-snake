@@ -45,13 +45,42 @@ server.listen(port, ()=>{
 let SOCKET_LIST = {};       // holds sockets of connected players
 var game = new Game();      // game object
 
+
+
+
+
 // handle websockets
 io.sockets.on('connection', (socket) => {
+
+
+    function handleKeyPress(data){
+        console.log('keypress');
+        if(data && data.hasOwnProperty("direction"))
+        {
+            var snakeDead = game.moveSnake(player_id, data.direction);
+            if(snakeDead == 'Dead')
+            {
+                handleDeadSnake();
+            }
+            //socket.emit('update', game);
+            handleUpdates(false);
+        }
+    }
+
+    function handleDeadSnake(){
+        console.log("-- Snake died");
+        socket.removeListener('keypress', handleKeyPress);
+        socket.emit('dead', {dead: true});
+    }
 
     // handle update (move players, etc)
     function handleUpdates(doMove = true){
         if(doMove)
-            game.move();
+         {   if(game.move() == 'Dead')
+            {
+                handleDeadSnake();
+            }
+        }
         //socket.broadcast.emit('update', game);
         for (let soc in SOCKET_LIST) {
             SOCKET_LIST[soc].emit('update', game);
@@ -83,24 +112,15 @@ io.sockets.on('connection', (socket) => {
 
             // remove player on disconnect
             socket.on('disconnect', ()=>{
+                console.log('disconnect');
                 game.deletePlayer(player_id);
                 delete SOCKET_LIST[socket.id];
             });
 
+
+
             // handle keypress
-            socket.on('keypress', (data)=>{
-                if(data && data.hasOwnProperty("direction"))
-                {
-                    var snakeDead = game.moveSnake(player_id, data.direction);
-                    if(snakeDead == 'Dead')
-                    {
-                        console.log("-- Snake died");
-                        socket.emit('dead', {dead: true});
-                    }
-                    //socket.emit('update', game);
-                    handleUpdates(false);
-                }
-            });
+            socket.on('keypress', handleKeyPress);
         }
     // else spectator mode
     else{

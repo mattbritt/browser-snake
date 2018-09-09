@@ -61,7 +61,7 @@ module.exports = class Game {
 
     // add player to free spot on board
     addPlayer(id, name){
-
+        console.log(id , name);
         // make sure there's food to eat
         if(this.Food.length < 1)
         {
@@ -80,10 +80,12 @@ module.exports = class Game {
         
         // create new snake for player
         this.Snakes[id] = new snake(name, x, y, color);
+        console.log(this.Snakes[id]);
     }
 
     // delete player when disconnected
     deletePlayer(id){
+        console.log('delete');
         if(id in this.Snakes){
             // clean up board
             var segments = this.Snakes[id].segmentList;
@@ -106,36 +108,39 @@ module.exports = class Game {
 
     // move snakes
     moveSnake(id, direction){
-        var nextPos = this.Snakes[id].nextPos(direction);
+        if(id in this.Snakes){
+            var nextPos = this.Snakes[id].nextPos(direction);
 
-        if(this.board.getSpace(nextPos.x, nextPos.y) != false)
-        {
-            switch(this.board.getSpace(nextPos.x, nextPos.y))
+            if(this.Snakes[id].direction != null && this.board.getSpace(nextPos.x, nextPos.y) != false)
             {
-                case true:
-                    this.Snakes[id].direction = null;
-                    //this.deletePlayer(id);
-                    return 'Dead';
-                    break;
-                case 'Food':
-                    this.Snakes[id].extend(2);
-                    this.Food = [];
-                    this.addFood();
-                    this.checkScore(id);
-                    break;
-            };
+                switch(this.board.getSpace(nextPos.x, nextPos.y))
+                {
+                    case true:
+                    console.log('collision');
+                        this.Snakes[id].direction = null;
+                        this.deletePlayer(id);
+                        console.log('returning dead');
+                        return 'Dead';
+                        break;
+                    case 'Food':
+                        this.Snakes[id].extend(2);
+                        this.Food = [];
+                        this.addFood();
+                        this.checkScore(id);
+                        break;
+                };
+            }
+            var tail = this.Snakes[id].getTail();
+            this.Snakes[id].moveSnake(direction);
+            var head = this.Snakes[id].getHead();
+            this.board.setSpace(tail.x, tail.y, false);
+            this.board.setSpace(head.x, head.y, true);
         }
-        var tail = this.Snakes[id].getTail();
-        this.Snakes[id].moveSnake(direction);
-        var head = this.Snakes[id].getHead();
-        this.board.setSpace(tail.x, tail.y, false);
-        this.board.setSpace(head.x, head.y, true);
     }
-
     move(){
         for(var snake in this.Snakes){
             //this.Snakes[snake].moveSnake(this.Snakes[snake].direction);
-            this.moveSnake(snake, this.Snakes[snake].direction);
+            return this.moveSnake(snake, this.Snakes[snake].direction);
         }
     }
 

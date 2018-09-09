@@ -138,6 +138,7 @@ snakes.push(new Snake("nother snake", 20, 20, 'pink', ctx));
 // init game on load
 function doReplay(){
     replayButton.disabled = true;
+    document.addEventListener('keydown', handleKeypress);
     socket.emit('addPlayer', { name: playerName });
 }
 
@@ -222,7 +223,7 @@ function updateGame(data = null) {
             //ctx.stroke();
         }
     }
-console.log(data);
+//console.log(data);
 
 
     if (data.hasOwnProperty("Snakes")) {
@@ -245,12 +246,14 @@ console.log(data);
 
 function sendName(event) {
     playerName = document.querySelector("#playerName").value;
-    socket.emit('addPlayer', { name: playerName });
-    document.addEventListener('keydown', handleKeypress); // add after modal close
+    doReplay();
+    //  socket.emit('addPlayer', { name: playerName });
+  //  document.addEventListener('keydown', handleKeypress); // add after modal close
     event.preventDefault();
 }
 // handle keypresses
 function handleKeypress(event) {
+    console.log('handleKeyPress');
     event.preventDefault();
     switch (event.code) {
         case 'ArrowUp':
@@ -281,8 +284,10 @@ socket.on('update', (data) => {
 
 socket.on('dead', (data) => {
     console.log("*** Snake died");
+    document.removeEventListener('keydown', handleKeypress);
     replayButton.disabled = false;
     ctx.fillStyle = "blue";
+
     //window.location.replace('/client/dead.html');
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 })
