@@ -131,17 +131,13 @@ snakes.push(new Snake("s1", 5, 7, 'blue', ctx));
 snakes.push(new Snake("nother snake", 20, 20, 'pink', ctx));
 
 // init game on load
+
 window.onload = function () {
     $('#getNameModal').modal('show');
     document.querySelector('#nameBtn').addEventListener('click', sendName);
-
-    startTimer();
 }
 
-// start the game (and timer)
-function startTimer() {
-    setInterval(updateGame, timeInterval);
-}
+
 
 // drawSegment draws an individual snake segment
 // x and y are in units of the grid
@@ -152,6 +148,7 @@ function drawSegment(x, y, color) {
     ctx.fill();
     ctx.stroke();
 }
+
 
 function drawSnake(snake) {
     for (var segment in snake.segmentList) {

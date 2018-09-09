@@ -2,6 +2,7 @@
 module.exports = class Snake {
     constructor(name, x, y, color){
         this.name = name;
+        this.score = 0;
         this.segmentList = [{'x':x, 'y':y}];
         this.x = x;                 // head x position (in grid units)
         this.y = y;                 // head y position (in grid units)

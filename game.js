@@ -1,10 +1,14 @@
 // game class runs the snake game logic
 var board = require('./gameBoard.js');
 var snake = require('./snake.js');
+var fs = require('fs');
 
 const boardX = 50;      // board x size in segments
 const boardY = 37;      // board y size in segments
 const colors = ["blue", "red", "pink", "grey", "white", "black", "brown", "green"];  // if number players exceeds number colors, server will crash
+
+
+
 
 module.exports = class Game {
     constructor(){
@@ -12,6 +16,20 @@ module.exports = class Game {
         this.Snakes = {};
         this.Food = [];
         this.colorsUsed = {};
+        this.PlayerData = {};
+
+
+        // read existing player data
+        // based on code by Zamboney at https://stackoverflow.com/questions/36856232/write-add-data-in-json-file-using-node-js
+        fs.readFile('data.json',function(err,content){
+            if(!err)
+            {
+                this.playerData = JSON.parse(content);
+            }
+
+          });
+
+
     }
 
     // return number of current players
@@ -82,6 +100,10 @@ module.exports = class Game {
         }
     }
 
+    checkScore(id){
+    
+    }
+
     // move snakes
     moveSnake(id, direction){
         var nextPos = this.Snakes[id].nextPos(direction);
@@ -99,6 +121,7 @@ module.exports = class Game {
                     this.Snakes[id].extend(2);
                     this.Food = [];
                     this.addFood();
+                    this.checkScore(id);
                     break;
             };
         }
