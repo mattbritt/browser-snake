@@ -58,7 +58,7 @@ io.sockets.on('connection', (socket) => {
         setInterval(handleUpdates, 250);
     }
     var player_id = Math.random() * 10;
-    //socket.id = (Math.random() + 1).toString(36).slice(2,18);
+    socket.id = (Math.random() + 1).toString(36).slice(2,18);
     //socket.id = socket.id.toString();
     console.log(socket.id)
     SOCKET_LIST[socket.id] = socket;
