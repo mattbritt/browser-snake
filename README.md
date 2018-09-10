@@ -7,7 +7,7 @@ Built by the crackpot team browser-snake consisting of Brooks Przybylek, Alex Ch
 
 **Description:**
 
-This project is an implementaion of the classic Snakes game but allows multiplayer play.  There is a server which runs the game, while each player's client receives game data using websockets.  Gameplay is as follows:
+This project is an implementation of the classic Snakes game but allows multiplayer play.  There is a server which runs the game, while each player's client receives game data using websockets.  Gameplay is as follows:
 - Use Arrow Keys to move
 - To move faster, press the arrow key in the direction you wish to travel
 - Eat food pellets to grow your snake
