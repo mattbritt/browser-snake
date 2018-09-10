@@ -1,4 +1,4 @@
-# browser-snake
+# [browser-snake](https://browser-snake.herokuapp.com/)
 Multiplayer web based snake game.  Built for Beaverhacks Fall 2018. 
 
 ![Gamplay Screenshot](Screenshot.png)
